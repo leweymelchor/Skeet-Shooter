@@ -34,10 +34,58 @@ class Target(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
 
+class GameState():
+    def __init__(self):
+        self.state = 'intro'
+
+    def intro(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+
+            if event.type == pg.MOUSEBUTTONDOWN:
+                self.state = 'main_game'
+
+        pg.display.flip()
+
+        for x in range(0, 1280, 230):
+            for y in range(0, 720, 256):
+                screen.blit(background, (x, y))
+        screen.blit(ready, (screen_width // 2 - 115, screen_height // 2 - 33))
+
+        crosshair_group.draw(screen)
+        crosshair_group.update()
+
+    def main_game(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+
+            if event.type == pg.MOUSEBUTTONDOWN:
+                crosshair.shoot()
+
+        for x in range(0, 1280, 230):
+            for y in range(0, 720, 256):
+                screen.blit(background, (x, y))
+        target_group.draw(screen)
+        crosshair_group.draw(screen)
+        crosshair_group.update()
+
+        pg.display.flip()
+
+    def state_manager(self):
+        if self.state == 'intro':
+            self.intro()
+        if self.state == 'main_game':
+            self.main_game()
+
+
 # Settings
 pg.init()
 clock = pg.time.Clock()
-
+game_state = GameState()
 # Screen
 screen_width = 1280
 screen_height = 720
@@ -46,6 +94,7 @@ screen = pg.display.set_mode((screen_width, screen_height))
 pg.display.set_caption('Skeet Shooter')
 
 background = pg.image.load('sprites/bg.png')
+ready = pg.image.load('images/ready.png')
 
 pg.mouse.set_visible = False
 
@@ -61,20 +110,5 @@ for target in range(20):
     target_group.add(new_target)
 
 while True:
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            sys.exit()
-
-        if event.type == pg.MOUSEBUTTONDOWN:
-            crosshair.shoot()
-
-    pg.display.flip()
-
-    for x in range(0, 1280, 230):
-        for y in range(0, 720, 256):
-            screen.blit(background, (x, y))
-    target_group.draw(screen)
-    crosshair_group.draw(screen)
-    crosshair_group.update()
+    game_state.state_manager()
     clock.tick(60)
