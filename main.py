@@ -1,22 +1,22 @@
-import pygame, sys
+import pygame as pg, sys
 
-pygame.init()
+pg.init()
 
-clock = pygame.time.Clock()
+clock = pg.time.Clock()
 
 screen_width = 1920
 screen_height = 1080
 
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Frog Animation')
+screen = pg.display.set_mode((screen_width, screen_height))
+pg.display.set_caption('Name Here')
 
 
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            pg.quit()
             sys.exit()
 
     screen.fill((0,0,0))
-    pygame.display.flip()
+    pg.display.flip()
     clock.tick(60)
